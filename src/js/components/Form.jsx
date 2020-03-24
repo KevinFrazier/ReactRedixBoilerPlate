@@ -4,7 +4,8 @@ import * as actions from '../actions.js'
 
 function mapDispatchToProps(dispatch){
     return{
-        addArticle: article => dispatch(actions.addArticle(article))
+        addArticle: article => dispatch(actions.addArticle(article)),
+        postData: data => dispatch(actions.postData(data))
     }
 }
 
@@ -28,6 +29,9 @@ class ConnectedForm extends React.Component{
         event.preventDefault();
         const {title} = this.state
         this.props.addArticle({title});
+
+        this.props.postData({title: title})
+
         this.setState({title: ""});
     }
     render() {

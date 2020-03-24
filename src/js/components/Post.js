@@ -1,6 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {getData} from '../actions'
+import * as actions from '../actions'
+
+function mapStateToProps(state){
+    return{
+        articles: state.remoteArticles.slice(0,10),
+        fetchedData : state.fetchedData
+    };
+}
+
+function mapDispatchToProps(dispatch){
+    return{
+        getData: () => dispatch(actions.getData())
+    }
+}
 
 export class Post extends React.Component{
     constructor(props){
@@ -9,26 +22,36 @@ export class Post extends React.Component{
     }
 
     componentDidMount(){
+        console.log("getting data")
         this.props.getData()
     }
 
     render(){
-        return (
-            <ul>
-              {this.props.articles.map(el => (
-                <li key={el.id}>{el.title}</li>
-              ))}
-            </ul>
-          );
+
+        console.log("fetchedData: " + this.props.fetchedData)
+        if(this.props.fetchedData){
+            
+            const aggregateArticles = this.props.articles[0]
+            console.log("this.props.articles:")
+            console.log(Object.values(aggregateArticles))
+            
+            return (
+                <ul>
+                {Object.values(aggregateArticles).map(el => (
+                    <li key={el.id}>{el.title}</li>
+                ))}
+                </ul>
+            );
+        }
+
+        return(
+            <div><p>fetching Data!</p></div>
+        )
     }
+
+     
 }
 
-function mapStateToProps(state){
-    return{
-        articles: state.remoteArticles.slice(0,10)
-    };
-}
 export default connect(
-    mapStateToProps,
-    {getData}
+    mapStateToProps,mapDispatchToProps
 )(Post)
