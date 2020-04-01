@@ -5,7 +5,7 @@ import {Spinner, Row, Col, Container} from 'react-bootstrap'
 import { useEffect } from 'react';
 
 import ConnectedForm from '../components/articles/Form'
-import ConnectList from '../components/articles/List'
+import ConnectedList from '../components/articles/List'
 import Post from '../components/articles/Post'
 
 function mapDispatchToProps(dispatch){
@@ -41,17 +41,21 @@ export const UserPage = (props) => {
             {props.userData.repos ? 
             <div>
             <div>
-            <a>Repos found</a>
+                <h2>Logged On</h2>
             </div>
             <div>
-            <a>Articles</a>
-            <ConnectList/>
-            </div>
-            <div><a>Form</a></div>
-            <ConnectedForm/>
             
-            <a>Fetched Articles</a>
-            <Post/>
+            <h2>Articles</h2>
+            <ConnectedList />
+            </div>
+            <div>
+            <h2>Add a new article</h2>
+            <ConnectedForm />
+            </div>
+            <div>
+            <h2>API posts</h2>
+            <Post />
+            </div>
             </div>
             :
             <div>
