@@ -1,9 +1,34 @@
 import React from "react";
-import List from "./List";
-import Form from "./Form";
-import Post from "./Post";
+import UserPage from '../pages/UserPage'
+import LandingPage from '../pages/LandingPage.jsx'
+import * as actions from '../redux/actions'
+import {connect} from 'react-redux'
 
-import * as actions from '../actions.js'
+import * as middle from '../redux/middle'
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect,
+  useLocation
+} from "react-router-dom";
+
+import {Spinner} from 'react-bootstrap'
+
+function mapStateToProps(state){
+  return{
+      started : state.startup,
+      loggedOn : state.loggedOn
+  };
+}
+
+function mapDispatchToProps(dispatch){
+  return{
+      startup: () => dispatch(actions.startup()),
+  }
+}
 
 class App extends React.Component{
 
@@ -12,25 +37,60 @@ class App extends React.Component{
   }
 
   componentDidMount(){
+    this.props.startup()    
   }
-  render(){ 
+
+  renderRoutes(){
     return(
-      <>
-        <div>
-          <h2>Articles</h2>
-          <List />
-        </div>
-        <div>
-          <h2>Add a new article</h2>
-          <Form />
-        </div>
-        <div>
-          <h2>API posts</h2>
-          <Post />
-        </div>
-      </>
+          <Router>
+          <div>
+            <Switch>
+              <Route exact path="/">        
+                {this.props.loggedOn ? 
+                <Redirect to = "/dashboards"/>
+                :
+                <LandingPage/>
+                }
+                
+
+              </Route>
+              <Route path="/dashboards">
+                
+                {this.props.loggedOn ? 
+                  <UserPage/>
+
+                  :
+                  <div>
+                    <Redirect to= "/"/>
+                  </div>
+                  
+                }
+                
+                
+              </Route>
+              
+            </Switch>
+          </div>
+          </Router>
+        )
+  }
+  render(props){
+
+    return(
+      <div>
+      {this.props.started ? 
+        //spiner would be here
+        this.renderRoutes()
+        :
+        <p>Attempting</p>
+      }
+      </div>
+
+      
+
     )
   }
 }
-
-export default App;
+export default connect(
+  mapStateToProps,mapDispatchToProps
+)(App);

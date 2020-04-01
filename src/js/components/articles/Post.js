@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import * as actions from '../actions'
+import * as actions from '../../redux/actions'
 
 function mapStateToProps(state){
     return{
@@ -22,18 +22,18 @@ export class Post extends React.Component{
     }
 
     componentDidMount(){
-        console.log("getting data")
+        
         this.props.getData()
     }
 
     render(){
 
-        console.log("fetchedData: " + this.props.fetchedData)
+        
         if(this.props.fetchedData){
             
             const aggregateArticles = this.props.articles[0]
-            console.log("this.props.articles:")
-            console.log(Object.values(aggregateArticles))
+            
+            
             
             return (
                 <ul>

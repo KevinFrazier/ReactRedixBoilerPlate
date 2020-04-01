@@ -1,14 +1,14 @@
 import {createStore, applyMiddleware} from 'redux';
 import rootReducer from './reducers.js';
-import { forbiddenWordsMiddleware } from './middle';
-import thunk from 'redux-thunk'
+import * as middle from './middle';
+import * as thunk from 'redux-thunk'
 
 //const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
+const MIDDLEWARES = Object.values(thunk).concat(Object.values(middle))
 const store = createStore(
     rootReducer,
     //storeEnhancers(applyMiddleware(forbiddenWordsMiddleware))
-    applyMiddleware(forbiddenWordsMiddleware, thunk)
+    applyMiddleware(...MIDDLEWARES)
     )
 //tips: can pass initial state to createStore -> server side rendering, state preloading
 
