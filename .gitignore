@@ -28,3 +28,4 @@ firestore*
 functions/*
 public/*
 storage.rules
+src/js/local_storage/*

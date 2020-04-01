@@ -14,24 +14,82 @@ export function startup(){
 
     console.log("attempting startup")
     
+    //initialize credentials
     firebase.initializeApp(credentials)
+
+    //for 3rd party OAuth providers (FB, Twitter, etc), in order to keep persistence, you must retrieve the access token of the user
+    //firebase doesn't refresh this for you
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE).catch(function (error){
         console.error(error)
     })
     
-    return {type: constants.STARTUP, payload: {startup: true}}
+    firebase.auth().onAuthStateChanged(function(user){
+        if(user){
+
+        }
+        else{
+            console.log("No user is logged on")
+        }
+    })
+
+    return{type: constants.STARTUP, payload: {startup: true, loggedOn: false, sessionExpired: true}}
+
+    
 }
 
 export function login(provider){
 
-    if(provider == "Google"){
-        return {type: constants.AUTH.GOOGLE, payload: {status: "attempting"}}
-    }
-    if(provider == "Github"){
-        return {type: constants.AUTH.GITHUB, payload: {status: "attempting"}}
-    }
+    // if(provider == "Google"){
+    //     return {type: constants.AUTH.GOOGLE, payload: {status: "attempting"}}
+    // }
+    // if(provider == "Github"){
+    //     return {type: constants.AUTH.GITHUB, payload: {status: "attempting"}}
+    // }
 
-    console.error("PROVIDER: " + provider + " is not a valid provider")
+    // console.error("PROVIDER: " + provider + " is not a valid provider")
+    
+    var myProvider = null
+    switch(provider){
+        case "Google":
+            myProvider = new firebase.auth.GoogleAuthProvider();
+            break;
+        case "Github":
+            myProvider = new firebase.auth.GithubAuthProvider();
+            myProvider.addScope('repo');
+            break;
+        default:
+            console.error("PROVIDER: " + provider + " is not a valid provider")
+            return
+            break;
+    }
+    
+    if(myProvider){
+                
+        // Using a popup.
+        myProvider.addScope('profile');
+        myProvider.addScope('email');
+        
+        return function(dispatch){
+            
+            firebase.auth().signInWithPopup(myProvider).then(function(result) {
+                // This gives you a Google Access Token.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+                console.log("login success:")
+                console.log("credentials:")
+                console.log(result.credential)
+                
+
+                dispatch({type: constants.LOGIN, payload: {status: "success", user: user, token: token, provider: provider, loggedOn : true}})    
+            })
+            .catch(function(error){
+                
+            });
+        }
+        
+    }
+   
 }
 //Fetch GET data as a json from url
 export function getData(){

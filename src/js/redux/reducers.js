@@ -7,13 +7,14 @@ const initialState = {
     fetchedData : false,
     loggedOn: false,
     user: null,
-    startup: false
+    startup: false,
+    files: null,
 
 }
 
 //where the states come from
 function rootReducer(state = initialState, action){
-
+    
     if(action.type === constants.ADD_ARTICLE){
         return Object.assign({}, state,{
             articles: state.articles.concat(action.payload)
