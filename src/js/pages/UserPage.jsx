@@ -1,8 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import * as actions from '../redux/actions.js'
-import {Spinner, Row, Col} from 'react-bootstrap'
+import {Spinner, Row, Col, Container} from 'react-bootstrap'
 import { useEffect } from 'react';
+
+import ConnectedForm from '../components/articles/Form'
+import ConnectList from '../components/articles/List'
+import Post from '../components/articles/Post'
 
 function mapDispatchToProps(dispatch){
     return{
@@ -32,13 +36,22 @@ export const UserPage = (props) => {
     return(        
         <div>
 
-            <Row>
+            <Container>
             <Col></Col>
             {props.userData.repos ? 
             <div>
-                <Col>
-                <p>Repos found</p>
-                </Col>
+            <div>
+            <a>Repos found</a>
+            </div>
+            <div>
+            <a>Articles</a>
+            <ConnectList/>
+            </div>
+            <div><a>Form</a></div>
+            <ConnectedForm/>
+            
+            <a>Fetched Articles</a>
+            <Post/>
             </div>
             :
             <div>
@@ -49,7 +62,7 @@ export const UserPage = (props) => {
             
             }
             <Col></Col>
-            </Row>
+            </Container>
         </div>
     )
 
